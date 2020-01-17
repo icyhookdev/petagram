@@ -5,12 +5,7 @@ const PhotoCardListComponent = ({ data: { photos = [] } } = {}) =>
   [1, 2].length > 0 && (
     <ul>
       {photos.map(photo => (
-        <PhotoCard
-          key={photo.id}
-          id={photo.id}
-          likes={photo.likes}
-          src={photo.src}
-        />
+        <PhotoCard key={photo.id} {...photo} />
       ))}
     </ul>
   );

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { runInNewContext } from 'vm';
 import StyledCategoriesList from './CategoriesList.style';
 import Category from '../Category/Category';
 import useCategoriesData from '../../hooks/useCategoriesData';
@@ -25,19 +24,19 @@ const CategoriesList = () => {
     <StyledCategoriesList fixed={fixed}>
       {loading
         ? [1, 2, 3, 4, 5, 6].map(i => (
-            <li className="category-item" key={i}>
-              <LoadingCategory />
-            </li>
-          ))
+          <li className="category-item" key={i}>
+            <LoadingCategory />
+          </li>
+        ))
         : categories.map(category => (
-            <li className="category-item" key={category.id}>
-              <Category
-                cover={category.cover}
-                emoji={category.emoji}
-                path={`/pet/${category.id}`}
-              />
-            </li>
-          ))}
+          <li className="category-item" key={category.id}>
+            <Category
+              cover={category.cover}
+              emoji={category.emoji}
+              path={`/pet/${category.id}`}
+            />
+          </li>
+        ))}
     </StyledCategoriesList>
   );
 
@@ -51,4 +50,4 @@ const CategoriesList = () => {
   );
 };
 
-export default CategoriesList;
+export default React.memo(CategoriesList);

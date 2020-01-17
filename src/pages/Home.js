@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { memo } from 'react';
 import CategoriesList from '../components/CategoriesList/CategoriesList';
 import PhotoCardList from '../container/PhotoCardList';
+import Layout from '../components/Layout/Layout';
 
 const Home = ({ id }) => (
   <>
-    <CategoriesList />
-    <PhotoCardList categoryId={id} />
+    <Layout title="App" subtitle="Find pet's photos">
+      <CategoriesList />
+      <PhotoCardList categoryId={id} />
+    </Layout>
   </>
 );
 
-export default Home;
+export default memo(Home, (prevProps, props) => prevProps.id === props.id);

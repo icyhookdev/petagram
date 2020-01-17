@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { Link } from '@reach/router';
+import PropTypes from 'prop-types';
 import StyledPhotoCard from './PhotoCard.style';
-import useLocalStorage from '../../hooks/useLocalStorage';
 import useNearScreen from '../../hooks/useNearScreen';
 import FavButton from '../FavButton/FavButton';
 import ToggleLikeMutation from '../../container/ToggleLikeMutation';
@@ -9,11 +9,8 @@ import ToggleLikeMutation from '../../container/ToggleLikeMutation';
 const DEFAULT_IMAGE =
   'https://res.cloudinary.com/midudev/image/upload/w_300/q_80/v1560262103/dogs.png';
 
-const PhotoCard = ({ id, likes = 0, src = DEFAULT_IMAGE }) => {
+const PhotoCard = ({ id, liked, likes = 0, src = DEFAULT_IMAGE }) => {
   const { show, elementRef } = useNearScreen();
-  const lsIdLike = `${id}-like`;
-  const { saveToLocalStorage, storeValue } = useLocalStorage(lsIdLike, false);
-
   return (
     <StyledPhotoCard ref={elementRef} key={id}>
       {show && (
@@ -26,19 +23,16 @@ const PhotoCard = ({ id, likes = 0, src = DEFAULT_IMAGE }) => {
           <ToggleLikeMutation>
             {toggleLike => {
               const handleFavClick = () => {
-                !storeValue &&
-                  toggleLike({
-                    variables: {
-                      input: { id },
-                    },
-                  });
-
-                saveToLocalStorage(!storeValue);
+                toggleLike({
+                  variables: {
+                    input: { id },
+                  },
+                });
               };
 
               return (
                 <FavButton
-                  liked={storeValue}
+                  liked={liked}
                   likes={likes}
                   clicked={handleFavClick}
                 />
@@ -49,6 +43,22 @@ const PhotoCard = ({ id, likes = 0, src = DEFAULT_IMAGE }) => {
       )}
     </StyledPhotoCard>
   );
+};
+
+PhotoCard.propTypes = {
+  id: PropTypes.string.isRequired,
+  liked: PropTypes.bool.isRequired,
+  likes(props, propName, componentName) {
+    const propValue = props[propName];
+    if (propValue === undefined) {
+      return new Error('value must be defined');
+    }
+
+    if (propValue < 0) {
+      return new Error('value must be greater than 0');
+    }
+  },
+  src: PropTypes.string.isRequired,
 };
 
 export default PhotoCard;
